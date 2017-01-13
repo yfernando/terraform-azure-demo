@@ -47,16 +47,16 @@ Summary:
   ```
   $ azure login
   ```
-  > If 2FA, do as per the `info` on the command line
-  > ```
-  > info:    Executing command login
-  > \info:    To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code ABC9E9GHI to authenti
-  > ```
-  > If 2FA is succesfull, should return:
-  > ```
-  > info:    Added subscription {guid}
-  > info:    Added subscription {guid}
-  > info:    login command OK
+  If 2FA, do as per the `info` on the command line
+  ```
+  info:    Executing command login
+  \info:    To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code ABC9E9GHI to authenticate
+  ```
+  If 2FA is succesfull, then should return:
+  ```
+  info:    Added subscription {guid}
+  info:    Added subscription {guid}
+  info:    login command OK
   ```
 
 3. Create the AD application and service principal
