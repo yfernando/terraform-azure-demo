@@ -57,7 +57,7 @@ $ azure login
 > info:    Added subscription {guid}
 > info:    Added subscription {guid}
 > info:    login command OK
-> ```
+```
 
 3. Create the AD application and service principal
 ```
