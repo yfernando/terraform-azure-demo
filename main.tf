@@ -104,10 +104,9 @@ resource "azurerm_virtual_machine" "vm" {
     create_option = "FromImage"
   }
 
-
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
+    computer_name  = "demohost"
+    admin_username = "demo"
     admin_password = "Password1234!"
   }
 
