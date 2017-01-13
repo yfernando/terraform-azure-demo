@@ -80,6 +80,15 @@ Summary:
 ## Get credentials for the Terraform `azurerm` provider
 
 Once a `service principal` has been created, you can get the credentials needed to run Terraform on Azure.
+```
+provider "azurerm" {
+  subscription_id = "${var.subscription_id}"
+  tenant_id       = "${var.tenant_id}"
+  client_id       = "${var.client_id}"
+  client_secret   = "${var.client_secret}"
+
+}
+```
 
 1. To get `subscription_id` and `tenant_id`, use:
   ```
