@@ -12,7 +12,7 @@ provider "azurerm" {
 }
 ```
 
-## What is Service Principal ?
+## What is a Service Principal ?
 
 You most likely do not want to run your Terraform script under your own credentials. Instead, you create an identity for the application (i.e. Terraform) that includes authentication credentials and role assignments. This is called  a `service principal` in Azure lingo. More details [here.](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authenticate-service-principal)
 
