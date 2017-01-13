@@ -26,11 +26,12 @@ There are two high-level tasks to complete.
 
 #### Using Azure ARM Portal
 
-You can do this in either via [Azure ARM portal] as described [here](https://www.terraform.io/docs/providers/azurerm/).
+You can do this via [Azure ARM portal](http://portal.azure.com) as described [here](https://www.terraform.io/docs/providers/azurerm/).
 
 #### Using Azure CLI
 
-Login to you Azure subscription to get the `subscription_id` and `tenant_id` using the Azure CLI.
+Or you can do this via Azue CLI.
+Login to you Azure subscription to get the `subscription_id` and `tenant_id`.
 
 1. Get Azure-CLI
 ```
