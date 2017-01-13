@@ -17,7 +17,7 @@ provider "azurerm" {
 You most likely do not want to run your Terraform script under your own credentials. Instead, you create an identity for the application (i.e. Terraform) that includes authentication credentials and role assignments. This is called  a `service principal` in Azure lingo. More details [here.](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authenticate-service-principal)
 
 
-### Create a Service Principal
+## Create a Service Principal
 
 There are two high-level tasks to do.
 
@@ -25,14 +25,14 @@ There are two high-level tasks to do.
 2. Grant necessary permissions for the App Registration in your `Azure Subscription(IAM)`.
 
 
-#### Using Azure ARM Portal
+### Using Azure ARM Portal
 
 <!-- You can do this via [Azure ARM portal](http://portal.azure.com) as described [here](https://www.terraform.io/docs/providers/azurerm/). -->
 
 [You can use Azure ARM portal to create a service principal that can access resources](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-create-service-principal-portal). Refer section `Create an Active Directory application`.
 
 
-#### Using Azure CLI
+### Using Azure CLI
 
 [You can also use the Azure CLI to create a service principal to access resources.](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authenticate-service-principal-cli#provide-credentials-through-azure-cli)
 
@@ -43,7 +43,7 @@ Summary:
 $ brew install azure-cli
 ```
 
-1. Login to your Azure subscription
+2. Login to your Azure subscription
 ```
 $ azure login
 ```
@@ -59,7 +59,7 @@ $ azure login
 > info:    login command OK
 ```
 
-1. Create the AD application and service principal
+3. Create the AD application and service principal
 ```
 $ azure ad sp create -n {your-application} -p {your-password}
 ```
@@ -77,8 +77,7 @@ data:                             http://terraform
 info:    ad sp create command OK
 ```
 
-
-### Get credentials for the Terraform `azurerm` provider
+## Get credentials for the Terraform `azurerm` provider
 
 Once a `service principal` has been created, you can get the credentials needed to run Terraform on Azure.
 
@@ -103,7 +102,7 @@ data:
 info:    account show command OK
 ```
 
-1. To get `client_id`, use:
+2. To get `client_id`, use:
 ```
 $ azure ad sp show -c terraform -v
 ```
@@ -121,10 +120,10 @@ data:                             9f123456-9bf3-4cab-8554-ee3c5a12345
 
 The value to use for `client_id` is the `{guid}` listed in the `service principal names.` i.e. `9f123456-9bf3-4cab-8554-ee3c5a12345`
 
-1. For the `client_secret`, use the `password` you gave when creating the AD application above.
+3. For the `client_secret`, use the `password` you gave when creating the AD application above.
 
 
-### Log in as the `service principal` through Azure CLI (non terraform)
+## Log in as the `service principal` through Azure CLI (non terraform)
 
 ```
 azure login -u {client_id} --service-principal --tenant {tenant-id}
