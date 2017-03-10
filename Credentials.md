@@ -76,6 +76,11 @@ Summary:
   data:                             http://terraform
   info:    ad sp create command OK
   ```
+4. Grant the service principal permissions on your subscription.
+
+```
+azure role assignment create --objectId {guid from above}  -o Contributor -c /subscriptions/{subscriptionId}/
+```
 
 ## Get credentials for the Terraform `azurerm` provider
 
