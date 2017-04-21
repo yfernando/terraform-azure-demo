@@ -39,11 +39,24 @@ There are two high-level tasks to do.
 Summary:
 
 1. Get Azure-CLI (assuming Mac for now)
+
+*v1 client*
   ```
   $ brew install azure-cli
   ```
 
+*v2 client*
+
+Get Azure-CLI v2 (assuming Mac for now) 
+or follow the guide [here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+  ```
+  $ curl -L https://aka.ms/InstallAzureCli | bash
+  ```
+
 2. Login to your Azure subscription
+
+*v1 client*
+
   ```
   $ azure login
   ```
@@ -59,7 +72,25 @@ Summary:
   info:    login command OK
   ```
 
+*v2 client*
+
+Login to your Azure subscription
+  ```
+  $ az login
+To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code xxxxx to authenticate.
+  ```
+  where xxxx is given from Azure. You will also be given one ore more json item block for each subscription , so ensure you are using the subscription of your choice.
+
+In addition ensure account subscription is set:
+  ```
+  az account set --subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  ```
+  where xxx is your subscription id which will be outputed from *2* that you wish to use.
+
 3. Create the AD application and service principal
+
+*v1 client*
+
   ```
   $ azure ad sp create -n {your-application} -p {your-password}
   ```
@@ -76,10 +107,41 @@ Summary:
   data:                             http://terraform
   info:    ad sp create command OK
   ```
-4. Grant the service principal permissions on your subscription.
+
+*v2 client*
+
+  ```
+  $ az ad sp create-for-rbac -n {your-application-name}
+  ```
+  i.e. `your-application-name` = `terraform`
+
+7. Grant the service principal permissions on your subscription.
+
+*v1 client*
 
 ```
 azure role assignment create --objectId {guid from above}  -o Contributor -c /subscriptions/{subscriptionId}/
+```
+
+*v2 client*
+
+```
+az role assignment create --assignee http://terraform --role contributor --scope /subscriptions/{subscriptionId}
+```
+Should output:
+```
+{
+  "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "displayName": "terraform",
+  "name": "http://terraform",
+  "password": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "tenant": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+```
+In an new shell on V2 client you can then test the login to ensure it works.
+```
+$ az login --service-principal -u http://terraform -p {password} --tenant {tenant}
+$ az vm list-sizes --location westus
 ```
 
 ## Get credentials for the Terraform `azurerm` provider
@@ -95,11 +157,12 @@ provider "azurerm" {
 }
 ```
 
-1. To get `subscription_id` and `tenant_id`, use:
+1. To get `subscription_id` and `tenant_id`, use: 
+
+*v1 client*
   ```
   $ azure account show
   ```
-
   Which returns:
   ```
   info:    Executing command account show
@@ -115,8 +178,28 @@ provider "azurerm" {
   data:
   info:    account show command OK
   ```
+*v2 client*
+  ```
+  $ az account show
+  ```
+  which *may* return similar:
+  ```
+  {
+  "environmentName": "AzureCloud",
+  "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "isDefault": true,
+  "name": "MandS - Platform - PoC",
+  "state": "Enabled",
+  "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "user": {
+    "name": "xxxx.xxxx@mnscorp.net",
+    "type": "user"
+  }
+}
+  ```
+2. To get `client_id`, use: 
 
-2. To get `client_id`, use:
+*v1 client*
   ```
   $ azure ad sp show -c terraform -v
   ```
@@ -133,12 +216,30 @@ provider "azurerm" {
   ```
 
   The value to use for `client_id` is the `{guid}` listed in the `service principal names.` i.e. `9f123456-9bf3-4cab-8554-ee3c5a12345`
-
+  
+  *v2 client*
+  ```
+  az ad sp show --id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  ```
+  where xxx is the AppId from the az role assignment create command output.
+  which returns:
+  ```
+  {
+    "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "displayName": "terraform",
+    "objectId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "objectType": "ServicePrincipal",
+    "servicePrincipalNames": [
+      "http://terraform-ejber-app",
+      "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    ]
+  }
+  ```
 3. For the `client_secret`, use the `password` you gave when creating the AD application above.
 
 
 ## Log in as the `service principal` through Azure CLI (non terraform)
-
+*v1 client*
   ```
   azure login -u {client_id} --service-principal --tenant {tenant-id}
   ```
@@ -146,3 +247,8 @@ provider "azurerm" {
   You will be prompted for the password. Provide the password you specified when creating the AD application.
 
   You are now authenticated as the service principal for the AD application that you created.
+
+*v2 client*
+  ```
+  az login -u {appId} --service-principal --tenant {tenant} --password {password}
+  ```
